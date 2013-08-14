@@ -40,8 +40,8 @@ namespace JustRunnerChat
 
             bundles.Add(new ScriptBundle("~/Scripts/js").Include(
                     "~/Scripts/class.js",
-                    "~/Scripts/q.js",
-                    "~/Scripts/sha1.js"
+                    "~/Scripts/sha1.js",
+                    "~/Scripts/q.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/ChatScripts/js").Include(
