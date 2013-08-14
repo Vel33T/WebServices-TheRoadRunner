@@ -31,7 +31,11 @@
 
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
-    @Scripts.Render("~/Scripts/js")
+@*    @Scripts.Render("~/Scripts/js")*@
+
+    <script src="../../Scripts/class.js"></script>
+    <script src="../../Scripts/q.js"></script>
+    <script src="../../Scripts/sha1.js"></script>
     @Scripts.Render("~/ChatScripts/js")
 </body>
 </html>
