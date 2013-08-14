@@ -57,18 +57,5 @@ namespace JustRunnerChat.Controllers
             });
             return responseMsg;
         }
-
-        [HttpGet]
-        [ActionName("users")]
-        public HttpResponseMessage GetAllUsers()
-        {
-            var responseMsg = this.PerformOperation(() =>
-            {
-                IEnumerable<User> users = UsersRepository.GetAllUsers();
-
-                return users;
-            });
-            return responseMsg;
-        }
     }
 }

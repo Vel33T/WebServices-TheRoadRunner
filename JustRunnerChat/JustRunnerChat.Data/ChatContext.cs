@@ -12,6 +12,7 @@ namespace JustRunnerChat.Data
     {
         public ChatContext() : base("JustRunnerChatDb")
         {
+            
         }
 
         public DbSet<User> Users { get; set; }
