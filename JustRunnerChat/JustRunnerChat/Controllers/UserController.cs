@@ -60,11 +60,10 @@ namespace JustRunnerChat.Controllers
 
         [HttpGet]
         [ActionName("users")]
-        public HttpResponseMessage GetAllUsers(string sessionKey)
+        public HttpResponseMessage GetAllUsers()
         {
             var responseMsg = this.PerformOperation(() =>
             {
-                UsersRepository.LoginUser(sessionKey);
                 IEnumerable<User> users = UsersRepository.GetAllUsers();
 
                 return users;
