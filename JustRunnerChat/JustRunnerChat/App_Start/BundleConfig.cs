@@ -20,8 +20,7 @@ namespace JustRunnerChat
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
 
@@ -38,6 +37,19 @@ namespace JustRunnerChat
                         "~/Content/themes/base/jquery.ui.datepicker.css",
                         "~/Content/themes/base/jquery.ui.progressbar.css",
                         "~/Content/themes/base/jquery.ui.theme.css"));
+
+            bundles.Add(new ScriptBundle("~/Scripts/js").Include(
+                    "~/Scripts/class.js",
+                    "~/Scripts/q.js",
+                    "~/Scripts/sha1.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/ChatScripts/js").Include(
+                    "~/ChatScripts/requester.js",
+                    "~/ChatScripts/persister.js",
+                    "~/ChatScripts/controller.js",
+                    "~/ChatScripts/main.js"
+                ));
         }
     }
 }

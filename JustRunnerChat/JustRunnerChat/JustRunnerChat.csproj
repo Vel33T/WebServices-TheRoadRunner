@@ -176,6 +176,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="ChatScripts\controller.js" />
+    <Content Include="ChatScripts\persister.js" />
+    <Content Include="ChatScripts\main.js" />
+    <Content Include="ChatScripts\requester.js" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -252,6 +256,13 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="PartialViews\create-game.html" />
+    <Content Include="PartialViews\join-game.html" />
+    <Content Include="PartialViews\login.html" />
+    <Content Include="PartialViews\register.html" />
+    <Content Include="PartialViews\scores.html" />
+    <Content Include="PartialViews\table.html" />
+    <Content Include="Scripts\class.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
@@ -267,6 +278,9 @@
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\q.js" />
+    <Content Include="Scripts\q.min.js" />
+    <Content Include="Scripts\sha1.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -1,12 +1,12 @@
 ﻿html {
-    background-color: #e2e2e2;
+    /*background-color: #e2e2e2;*/
     margin: 0;
     padding: 0;
 }
 
 body {
     background-color: #fff;
-    border-top: solid 10px #000;
+    border-top: solid 5px #aaa;
     color: #333;
     font-size: .85em;
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
@@ -99,7 +99,7 @@ h5, h6 {
 }
 
 #body {
-    background-color: #efeeef;
+    /*background-color: #efeeef;*/
     clear: both;
     padding-bottom: 35px;
 }
@@ -107,7 +107,7 @@ h5, h6 {
     .main-content {
         background: url("../Images/accent.png") no-repeat;
         padding-left: 10px;
-        padding-top: 30px;
+        padding-top: 10px;
     }
 
     .featured + .main-content {
@@ -115,7 +115,12 @@ h5, h6 {
     }
 
 header .content-wrapper {
-    padding-top: 20px; 
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+header {
+    border-bottom: 5px solid #aaa;
 }
 
 footer {
@@ -176,6 +181,11 @@ footer {
         list-style: none;
     }
 
+#login-container, #register-container {
+    width: 400px;
+    margin: 0 auto;
+}
+
 
 /* menu
 ----------------------------------------------------------*/
@@ -220,7 +230,7 @@ ul#menu {
         background-image: -webkit-linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
         background-image: linear-gradient(left, #7ac0da 0%, #a4d4e6 100%);
         color: #3e5667;
-        padding: 20px 40px 30px 40px;
+        padding: 10px;
     }
 
         .featured hgroup.title h1, .featured hgroup.title h2 {

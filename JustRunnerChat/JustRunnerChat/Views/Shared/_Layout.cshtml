@@ -9,15 +9,18 @@
 </head>
 <body>
     <header>
-        <div class="content-wrapper">
+        <div class="content-wrapper clear-fix">
             <div class="float-left">
                 <p class="site-title">
-                    <a href="~/">ASP.NET Web API</a></p>
+                    <a href="~/">Just Runner Chat</a>
+                </p>
             </div>
             <div class="float-right">
                 <nav>
                     <ul id="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                        <!--<li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>-->
+                        <li><a href="#" id="go-register">Register</a></li>
+                        <li><a href="#" id="go-login">Login</a></li>
                         <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
                     </ul>
                 </nav>
@@ -28,5 +31,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
+    @Scripts.Render("~/Scripts/js")
+    @Scripts.Render("~/ChatScripts/js")
 </body>
 </html>
