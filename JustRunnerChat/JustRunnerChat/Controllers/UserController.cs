@@ -57,16 +57,5 @@ namespace JustRunnerChat.Controllers
             });
             return responseMsg;
         }
-
-        [HttpPost]
-        [ActionName("add-avatar")]
-        public HttpResponseMessage AddAvatar(string nickname, string avatarLink)
-        {
-            var responseMsg = this.PerformOperation(() =>
-            {
-                UsersRepository.AddAvatar(nickname, avatarLink);
-            });
-            return responseMsg;
-        }
     }
 }

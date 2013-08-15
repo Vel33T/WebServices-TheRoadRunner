@@ -14,15 +14,23 @@ namespace JustRunnerChat.Controllers
 
         static BaseApiController()
         {
+            ErrorToStatusCodes["INV_GAME_USR"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["ERR_GEN_SVR"] = HttpStatusCode.InternalServerError;
             ErrorToStatusCodes["INV_OP_TURN"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["ERR_INV_NUM"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["ERR_INV_USR"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["ERR_INV_GAME"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["INV_GAME_AUTH_LEN"] = HttpStatusCode.Unauthorized;
+            ErrorToStatusCodes["ERR_GAME_STAT_FULL"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["ERR_GAME_STAT_PROG"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["ERR_GAME_STAT_FIN"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["INV_GAME_AUTH"] = HttpStatusCode.Unauthorized;
+            ErrorToStatusCodes["INV_OP_GAME_OWNER"] = HttpStatusCode.Unauthorized;
+            ErrorToStatusCodes["INV_OP_GAME_STAT"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["ERR_NOT_IN_GAME"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_USRNAME_LEN"] = HttpStatusCode.BadRequest;
-            ErrorToStatusCodes["INV_NKNAME_LEN"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_CHNAME_LEN"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_USRNAME_CHARS"] = HttpStatusCode.BadRequest;
-            ErrorToStatusCodes["INV_NKNAME_CHARS"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_CHNAME_CHARS"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_NICK_LEN"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_NICK_CHARS"] = HttpStatusCode.BadRequest;

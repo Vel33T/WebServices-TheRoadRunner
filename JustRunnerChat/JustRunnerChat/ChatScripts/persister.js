@@ -111,7 +111,7 @@ Chat.persisters = (function () {
         },
         
         sendMessage: function (channelName, messageText) {
-            var url = this.serviceUrl + "send";
+            var url = this.serviceUrl + "add-message?channelName=" + channelName;
             var data = {
                 name: channelName,
                 nickname: nickname,
@@ -130,6 +130,18 @@ Chat.persisters = (function () {
             };
 
             return Requester.post(url, data);
+        },
+        
+        getAll: function () {
+            var url = this.serviceUrl + "get-channels";
+
+            return Requester.get(url);
+        },
+        
+        getUsers: function (channelName) {
+            var url = this.serviceUrl + "get-users?channelName=" + channelName;
+
+            return Requester.get(url);
         }
     });
 

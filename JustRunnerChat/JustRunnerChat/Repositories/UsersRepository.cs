@@ -80,6 +80,7 @@ namespace JustRunnerChat.Repositories
         }
 
         /* public members */
+
         public static void CreateUser(string username, string nickname, string authCode)
         {
             ValidateUsername(username);
@@ -108,8 +109,7 @@ namespace JustRunnerChat.Repositories
                 {
                     Username = usernameToLower,
                     Nickname = nickname,
-                    AuthCode = authCode,
-                    AvatarLink = "http://icons.iconarchive.com/icons/deleket/bioman/128/Bioman-Avatar-3-Blue-icon.png"
+                    AuthCode = authCode
                 };
                 context.Users.Add(dbUser);
                 context.SaveChanges();
@@ -121,7 +121,8 @@ namespace JustRunnerChat.Repositories
         {
             ValidateUsername(username);
             ValidateAuthCode(authCode);
-            using (ChatContext context = new ChatContext())
+            var context = new ChatContext();
+            using (context)
             {
                 var usernameToLower = username.ToLower();
                 var user = context.Users.FirstOrDefault(u => u.Username.ToLower() == usernameToLower && u.AuthCode == authCode);
@@ -141,7 +142,8 @@ namespace JustRunnerChat.Repositories
         public static int LoginUser(string sessionKey)
         {
             ValidateSessionKey(sessionKey);
-            using (ChatContext context = new ChatContext())
+            var context = new ChatContext();
+            using (context)
             {
                 var user = context.Users.FirstOrDefault(u => u.SessionKey == sessionKey);
                 if (user == null)
@@ -155,7 +157,8 @@ namespace JustRunnerChat.Repositories
         public static void LogoutUser(string sessionKey)
         {
             ValidateSessionKey(sessionKey);
-            using (ChatContext context = new ChatContext())
+            var context = new ChatContext();
+            using (context)
             {
                 var user = context.Users.FirstOrDefault(u => u.SessionKey == sessionKey);
                 if (user == null)
@@ -169,7 +172,8 @@ namespace JustRunnerChat.Repositories
 
         public static IEnumerable<User> GetAllUsers()
         {
-            using (ChatContext context = new ChatContext())
+            var context = new ChatContext();
+            using (context)
             {
                 var users =
                     (from user in context.Users
@@ -178,23 +182,6 @@ namespace JustRunnerChat.Repositories
                          Nickname = user.Nickname,
                         });
                 return users.ToList();
-            }
-        }
-
-        public static void AddAvatar(string nickname, string avatarLink)
-        {
-            ValidateNickname(nickname);
-            using (ChatContext context = new ChatContext())
-            {
-                var user = context.Users.FirstOrDefault(u => u.Nickname == nickname);
-                if (user == null)
-                {
-                    throw new ServerErrorException(); //TODO: Add error code
-                }
-
-                user.AvatarLink = avatarLink;
-
-                context.SaveChanges();
             }
         }
     }

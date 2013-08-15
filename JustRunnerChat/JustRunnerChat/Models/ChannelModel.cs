@@ -23,6 +23,13 @@ namespace JustRunnerChat.Models
     }
 
     [DataContract]
+    public class ChannelModel
+    {
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
+    }
+
+    [DataContract]
     public class ChannelExitModel
     {
         [DataMember(Name = "name")]

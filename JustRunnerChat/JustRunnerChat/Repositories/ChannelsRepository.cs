@@ -19,11 +19,11 @@ namespace JustRunnerChat.Repositories
         {
             if (channelName == null || channelName.Length < MinNameChars || channelName.Length > MaxNameChars)
             {
-                throw new ServerErrorException("Channel name should be between 4 and 30 symbols long", "INV_CHNAME_LEN");
+                throw new ServerErrorException("Username should be between 4 and 30 symbols long", "INV_CHNAME_LEN");
             }
             else if (channelName.Any(ch => !ValidNameChars.Contains(ch)))
             {
-                throw new ServerErrorException("Channel name contains invalid characters", "INV_CHNAME_CHARS");
+                throw new ServerErrorException("Channel contains invalid characters", "INV_CHNAME_CHARS");
             }
         }
 
@@ -31,11 +31,11 @@ namespace JustRunnerChat.Repositories
         {
             if (nickname == null || nickname.Length < MinNameChars || nickname.Length > MaxNameChars)
             {
-                throw new ServerErrorException("Nickname should be between 4 and 30 symbols long", "INV_NKNAME_LEN");
+                throw new ServerErrorException("Username should be between 4 and 30 symbols long", "INV_CHNAME_LEN");
             }
             else if (nickname.Any(ch => !ValidNameChars.Contains(ch)))
             {
-                throw new ServerErrorException("Nickname contains invalid characters", "INV_NKNAME_CHARS");
+                throw new ServerErrorException("Username contains invalid characters", "INV_CHNAME_CHARS");
             }
         }
 
@@ -97,7 +97,7 @@ namespace JustRunnerChat.Repositories
                 var dbUser = context.Users.FirstOrDefault(u => u.Nickname.ToLower() == userNickname.ToLower());
 
                 var alreadyJoinedChannel = dbUser.Channels.FirstOrDefault(ch => ch.Name.ToLower() == channelName.ToLower());
-                if (alreadyJoinedChannel != null)
+                if (alreadyJoinedChannel == null)
                 {
                     throw new ServerErrorException("Already joined channel.", "ERR_JOINED_CHANNEL"); //TODO: Add error code
                 }
@@ -174,6 +174,35 @@ namespace JustRunnerChat.Repositories
                 })).ToList();
 
                 return historyModel;
+            }
+        }
+
+        public static IEnumerable<ChannelModel> GetChannels()
+        {
+            using (ChatContext context = new ChatContext())
+            {
+                var channels = context.Channels.Select(new Func<Channel, ChannelModel>(x => new ChannelModel()
+                {
+                    Name = x.Name
+                })).ToList();
+
+                return channels;
+            }
+        }
+
+        public static IEnumerable<UserModel> GetUsers(string channelName)
+        {
+            ValidateChannelName(channelName);
+            using (ChatContext context = new ChatContext())
+            {
+                var channel = context.Channels.FirstOrDefault(c => c.Name.ToLower() == channelName.ToLower());
+
+                var users = channel.Users.Select(new Func<User, UserModel>(x => new UserModel()
+                {
+                    Nickname = x.Nickname
+                })).ToList();
+
+                return users;
             }
         }
     }

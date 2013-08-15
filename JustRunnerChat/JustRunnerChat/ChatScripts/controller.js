@@ -21,6 +21,7 @@ Chat.controller = (function () {
             }
 
             this.atachUIHandlers("body");
+            this.getChannels();
         },
 
         loadLogin: function (selector) {
@@ -94,54 +95,114 @@ Chat.controller = (function () {
                 return false;
             });
 
-            wrapper.on("click", "#create-channel", function () {
-                var name = $("#channel-name").val();
-                var pass = $("#channel-pass").val();
-                self.persister.channels.create(name, pass);
-                return false;
-            });
-            
+            var count = 0;
             wrapper.on("click", "#add_tab", function () {
                 var addButton = $(".ui-dialog-buttonset").children().first();
                 addButton.attr("id", "addButton");
-                wrapper.on("click", "#addButton", function(parameters) {
-                    var name = $("#tab_title").val();
-                    var pass = $("#tab_content").val();
-                    var boxes =  $("#tabs ul li");
-                    var box = "";
-                    for (var i = 0; i < boxes.length; i++) {
-                        if (boxes[i].getAttribute("aria-selected") == "true") {
-                            box = boxes[i].getAttribute("aria-controls");
-                        }   
-                    }
-                    self.persister.channels.create(name, pass)
-                        .then(function (data) {
-                            connectToPubNub(name, box);
-                        }
-                    );
-                });
+                count++;
+                if (count == 1) {
+                    wrapper.on("click", "#addButton", function (parameters) {
+                        var name = $("#tab_title").val();
+                        var pass = $("#tab_content").val();
+                        self.persister.channels.create(name, pass).then(function (data) {
+                            this.addTab(name);
+                            this.loadChatBox();
+                        });
+
+                        return false;
+                    });
+                }
 
                 return false;
             });
-            
-            wrapper.on("click", "#update-area li a", function (parameters) {
+
+            wrapper.on("click", "#update-area li a", function(parameters) {
                 var name = $(this).text();
                 self.persister.channels.join(name, "")
                     .then(function(data) {
-                        connectToPubNub(name);
+                        self.addTab(name);
+                        this.loadChatBox();
                     });
-                
-            })
+
+            });
+
+            wrapper.on("click", "#tabs li a", function(ev) {
+                var channelName = $(this).text();
+
+                self.persister.channels.getUsers(channelName)
+                    .then(function (data) {
+                        var users = "";
+                        for (var i = 0; i < data.length; i++) {
+                            users += '<li>'+ data[i].nickname +'</li>';
+                        }
+                        $("#list-of-people").html(users);
+                    });
+            });
+
+            wrapper.on("click", "#chat-button", function() {
+                var message = $("#chat-input").val();
+                var boxes = $("#tabs ul li");
+                var channelName;
+                for (var i = 0; i < boxes.length; i++) {
+                    if (boxes[i].getAttribute("aria-selected") == "true") {
+                        channelName = boxes[i].children[0].innerHTML;
+                    }
+                }
+                self.persister.channels.sendMessage(channelName, message)
+                    .then(function(data) {
+                        self.loadChatBox();
+                    });
+                return false;
+            });
         },
         
-        connectToPubNub: function(channelName, box) {
-            $("#pubnub").attr("pub-key", "pub-c-52453842-4883-480d-87a9-787acde00194");
-            $("#pubnub").attr("sub-key", "pub-c-52453842-4883-480d-87a9-787acde00194");
-            
-            
-            var box = PUBNUB.$(box);
-            var input = PUBNUB.$('chat-input');
-            var channel = channelName;
+        addTab: function (clicked) {
+            var tabTitle = $("#tab_title"),
+                    tabContent = $("#tab_content"),
+                    tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
+                    tabCounter = 2;
+            var tabs = $("#tabs").tabs();
+
+            var label = clicked || "Tab " + tabCounter,
+            id = "tabs-" + tabCounter,
+            li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label)),
+            tabContentHtml = tabContent.val() || "Tab " + tabCounter + " content.";
+
+            tabs.find(".ui-tabs-nav").append(li);
+            tabs.append("<div id='" + id + "'></div>");
+            //$("#update-area ul").append("<li><a href='#'>" + tabTitle.val() + "</a></li>");
+            tabs.tabs("refresh");
+            tabCounter++;
+
+            return false;
+        },
+
+        getChannels: function () {
+            var self = this;
+            setInterval(function () {
+                self.persister.channels.getAll()
+                    .then(function (data) {
+                        var channelsHtml = "";
+                        for (var i = 0; i < data.length; i++) {
+                            channelsHtml += '<li><a href"#">' + data[i].name + '</a></li>';
+                        }
+                        $("#update-area").html(channelsHtml);
+                    });
+            }, 1000);
+        },
+        
+        loadChatBox: function () {
+            var pubnub = PUBNUB.init({
+                publish_key: 'pub-c-ddf12ac6-a70e-4372-86d8-64318d45d6dc',
+                subscribe_key: 'sub-c-e07ea95a-0445-11e3-b42d-02ee2ddab7fe',
+            });
+            //var str = "<div id=pubnub pub-key=pub-c-ddf12ac6-a70e-4372-86d8-64318d45d6dc sub-key=sub-c-e07ea95a-0445-11e3-b42d-02ee2ddab7fe></div>";
+            $("#tabs-1").append("<div id='box' />");
+            setInterval(1000);
+            //alert("aaaaaaaaaa");
+            var box = pubnub.$('box');
+            var input = pubnub.$('input');
+            var channel = 'chat';
 
             // HANDLE TEXT MESSAGE
             function chat_receive(text) {
@@ -150,27 +211,22 @@ Chat.controller = (function () {
             }
 
             // OPEN SOCKET TO RECEIVE TEXT MESSAGE
-            PUBNUB.subscribe({
+            pubnub.subscribe({
                 channel : channel,
                 message : chat_receive
             });
 
-            this.sendMessage(input);
-        },
-        
-        sendMessage: function(message) {
-
-            var input = PUBNUB.$('chat-input');
             // SEND TEXT MESSAGE
-            PUBNUB.bind('keyup', input, function (e) {
-                (e.keyCode || e.charCode) === 13 && PUBNUB.publish({
-                    channel: channel,
-                    message: input.value,
-                    x: (input.value = '')
+            pubnub.bind('keyup', input, function (e) {
+                (e.keyCode || e.charCode) === 13 && pubnub.publish({
+                    channel : channel,
+                    message : input.value,
+                    x       : (input.value='')
                 });
             });
-        }
-        
+
+            return false;
+        },
     });
 
     return {

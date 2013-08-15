@@ -77,5 +77,31 @@ namespace JustRunnerChat.Controllers
 
             return responseMsg;
         }
+
+        [HttpGet]
+        [ActionName("get-channels")]
+        public HttpResponseMessage GetChannels()
+        {
+            var responseMsg = this.PerformOperation(() =>
+            {
+                var channels = ChannelsRepository.GetChannels();
+                return channels;
+            });
+
+            return responseMsg;
+        }
+
+        [HttpGet]
+        [ActionName("get-users")]
+        public HttpResponseMessage GetUsers(string channelName)
+        {
+            var responseMsg = this.PerformOperation(() =>
+            {
+                var history = ChannelsRepository.GetUsers(channelName);
+                return history;
+            });
+
+            return responseMsg;
+        }
     }
 }

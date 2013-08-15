@@ -24,6 +24,13 @@ namespace JustRunnerChat.Models
     }
 
     [DataContract]
+    public class UserModel
+    {
+        [DataMember(Name = "nickname")]
+        public string Nickname { get; set; }
+    }
+
+    [DataContract]
     public class UserAvatar
     {
         [DataMember(Name = "nickname")]
