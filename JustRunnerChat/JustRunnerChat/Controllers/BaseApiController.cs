@@ -29,13 +29,17 @@ namespace JustRunnerChat.Controllers
             ErrorToStatusCodes["INV_OP_GAME_STAT"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["ERR_NOT_IN_GAME"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_USRNAME_LEN"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["INV_CHNAME_LEN"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_USRNAME_CHARS"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["INV_CHNAME_CHARS"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_NICK_LEN"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_NICK_CHARS"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["INV_USR_AUTH_LEN"] = HttpStatusCode.BadRequest;
             ErrorToStatusCodes["ERR_DUP_USR"] = HttpStatusCode.Conflict;
+            ErrorToStatusCodes["ERR_DUP_CHNAME"] = HttpStatusCode.Conflict;
             ErrorToStatusCodes["ERR_DUP_NICK"] = HttpStatusCode.Conflict;
             ErrorToStatusCodes["INV_USR_AUTH"] = HttpStatusCode.BadRequest;
+            ErrorToStatusCodes["ERR_JOINED_CHANNEL"] = HttpStatusCode.BadRequest;
         }
 
         public BaseApiController()
