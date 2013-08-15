@@ -25,6 +25,7 @@ Chat.persisters = (function () {
         init: function (rootUrl) {
             this.rootUrl = rootUrl;
             this.user = new Users(rootUrl);
+            this.channels = new Channels(rootUrl);
         },
 
         isLoggedIn: function () {

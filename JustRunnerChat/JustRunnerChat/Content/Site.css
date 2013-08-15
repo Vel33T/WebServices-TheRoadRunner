@@ -787,10 +787,9 @@ tr.pager td {
     text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
 }
 .circle-header, .circle-header-icon {
-    position: absolute;
+    display: inline-block;
     overflow: hidden;
-    top: 16px;
-    left: 22px;
+    margin-top: 15px;
     border: 3px solid rgba(255,255,255,0.3);
     border-radius: 100px;
     background: #f2f;
@@ -814,9 +813,8 @@ tr.pager td {
 }
 
 .circle-header-text {
-    position: absolute;
-    top: 23px;
-    left: 66px;
+    display: inline-block;
+    margin-top: -10px;
     letter-spacing: -1px;
     font-size: 20px;
     font-family: "Source Sans Pro";
@@ -835,7 +833,7 @@ tr.pager td {
     height: 406px;
 }
 .section-channels {
-    left: 850px;
+    left: 880px;
     width: 300px;
     height: 768px;
 }
@@ -874,11 +872,6 @@ tr.pager td {
 }
 
 /* UPDATES */
-.update-area {
-    position: absolute;
-    top: 85px;
-    left: 22px;
-}
 .update-item {
     margin: 10px 0;
     font-size: 14px;
@@ -999,7 +992,7 @@ tr.pager td {
 .chat-box-input {
     outline: 0;
     position: absolute;
-    //top: 10px;
+    top: 10px;
     left: 10px;
 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
@@ -1149,4 +1142,12 @@ border: none;
 
   .box {
 min-height: 30px;
+}
+
+label[for="channel-name"] {
+    margin: 10px 0 0 0;
+}
+
+#update-area {
+    margin-top: 50px;
 }

@@ -3,6 +3,7 @@
 /// <reference path="../Scripts/jquery-2.0.2.js" />
 /// <reference path="dataAccess.js" />
 /// <reference path="../Scripts/class.js" />
+/// <reference path="persister.js" />
 
 var Chat = Chat || {};
 
@@ -92,7 +93,84 @@ Chat.controller = (function () {
 
                 return false;
             });
+
+            wrapper.on("click", "#create-channel", function () {
+                var name = $("#channel-name").val();
+                var pass = $("#channel-pass").val();
+                self.persister.channels.create(name, pass);
+                return false;
+            });
+            
+            wrapper.on("click", "#add_tab", function () {
+                var addButton = $(".ui-dialog-buttonset").children().first();
+                addButton.attr("id", "addButton");
+                wrapper.on("click", "#addButton", function(parameters) {
+                    var name = $("#tab_title").val();
+                    var pass = $("#tab_content").val();
+                    var boxes =  $("#tabs ul li");
+                    var box = "";
+                    for (var i = 0; i < boxes.length; i++) {
+                        if (boxes[i].getAttribute("aria-selected") == "true") {
+                            box = boxes[i].getAttribute("aria-controls");
+                        }   
+                    }
+                    self.persister.channels.create(name, pass)
+                        .then(function (data) {
+                            connectToPubNub(name, box);
+                        }
+                    );
+                });
+
+                return false;
+            });
+            
+            wrapper.on("click", "#update-area li a", function (parameters) {
+                var name = $(this).text();
+                self.persister.channels.join(name, "")
+                    .then(function(data) {
+                        connectToPubNub(name);
+                    });
+                
+            })
+        },
+        
+        connectToPubNub: function(channelName, box) {
+            $("#pubnub").attr("pub-key", "pub-c-52453842-4883-480d-87a9-787acde00194");
+            $("#pubnub").attr("sub-key", "pub-c-52453842-4883-480d-87a9-787acde00194");
+            
+            
+            var box = PUBNUB.$(box);
+            var input = PUBNUB.$('chat-input');
+            var channel = channelName;
+
+            // HANDLE TEXT MESSAGE
+            function chat_receive(text) {
+                box.innerHTML = (''+text).replace( /[<>]/g, '' ) +
+                    '<br>' + box.innerHTML;
+            }
+
+            // OPEN SOCKET TO RECEIVE TEXT MESSAGE
+            PUBNUB.subscribe({
+                channel : channel,
+                message : chat_receive
+            });
+
+            this.sendMessage(input);
+        },
+        
+        sendMessage: function(message) {
+
+            var input = PUBNUB.$('chat-input');
+            // SEND TEXT MESSAGE
+            PUBNUB.bind('keyup', input, function (e) {
+                (e.keyCode || e.charCode) === 13 && PUBNUB.publish({
+                    channel: channel,
+                    message: input.value,
+                    x: (input.value = '')
+                });
+            });
         }
+        
     });
 
     return {

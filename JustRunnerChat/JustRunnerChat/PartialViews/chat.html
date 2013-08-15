@@ -37,6 +37,7 @@
         <div class="chat-box-area">
             <div class="chat-box-area-inset">
                 <div class="relative">
+                    <div id="pubnub" pub-key="pub-c-52453842-4883-480d-87a9-787acde00194" sub-key="sub-c-c57637d2-04c6-11e3-991c-02ee2ddab7fe"></div>
                     <input id="chat-input" class="chat-box-input" placeholder="chat">
                     <button id="chat-button" class="chat-box-button">Send</button>
                 </div>
@@ -66,14 +67,15 @@
                             $(this).dialog("close");
                         }
                     },
-                    close: function () {
+                    close: setTimeout(function () {
                         form[0].reset();
-                    }
+                    }, 500)
                 });
 
                 // addTab form: calls addTab function on submit and closes the dialog
                 var form = dialog.find("form").submit(function (event) {
                     addTab();
+                    
                     dialog.dialog("close");
                     event.preventDefault();
                 });
@@ -122,7 +124,7 @@
                     <label for="tab_title">Title</label>
                     <input type="text" name="tab_title" id="tab_title" value="" class="ui-widget-content ui-corner-all" />
                     <label for="tab_content">Password</label>
-                    <input type="text" name="tab_content" id="tab_content" class="ui-widget-content ui-corner-all"></input>
+                    <input type="text" name="tab_content" id="tab_content" class="ui-widget-content ui-corner-all" />
                 </fieldset>
             </form>
         </div>
@@ -131,6 +133,7 @@
 
         <div id="tabs">
             <ul>
+                <li><a href="#tabs-1">Base</a> <span class="ui-icon ui-icon-close" role="presentation">Remove Tab</span></li>
             </ul>
             <div id="tabs-1">
                 
@@ -145,9 +148,8 @@
             <div class="circle-header circle-header-one"></div>
             <div class="circle-header-text">Channels</div>
             <div class="circle-header-icon circle-header-icon-one"></div>
-
-            <button id="add_tab">Create Channel</button>
-
+            
+            <button type="button" id="add_tab" >Create Channel</button>
             <!--<div class="time" id="time">01:00<sup>pm</sup></div>-->
             <div class="time-line"></div>
 
