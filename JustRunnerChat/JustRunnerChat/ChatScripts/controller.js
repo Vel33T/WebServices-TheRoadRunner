@@ -32,12 +32,11 @@ Chat.controller = (function () {
             
         loadChat: function (selector) {
             var nickname = this.persister.getNickname();
-            $(selector).append('<div id=header></div>');
+            $(selector).load("../PartialViews/chat.html");
 
             $("#menu").prepend('<li><span>Hello, ' + nickname + '</span><a href="#" id="logout-button">Logout</a></li>');
             $("#go-register").parent().attr("style", "display:none");
             $("#go-login").parent().attr("style", "display:none");
-
         },
         
         atachUIHandlers: function (selector) {
@@ -58,7 +57,7 @@ Chat.controller = (function () {
 
                 self.persister.user.login(username, password)
                     .then(function (data) {
-                        self.loadUI(self.selector);
+                        self.loadChat(self.selector);
                     }, function (err) {
                         $("#login-reg-errors").html(err.responseJSON.Message);
                     });
@@ -74,7 +73,7 @@ Chat.controller = (function () {
                 self.persister.user.register(username, nickname, password)
                     .then(function () {
                         console.log("Register success!");
-                        self.loadUI(self.selector);
+                        self.loadChat(self.selector);
                     }, function (err) {
                         console.log(err);
                         $("#login-reg-errors").html(err.responseJSON.Message);
@@ -85,9 +84,10 @@ Chat.controller = (function () {
             wrapper.on("click", "#logout-button", function () {
                 self.persister.user.logout()
                     .then(function () {
-                        self.loadUI(self.selector);
-                        $("#go-register").parent().attr("style", "display:none");
-                        $("#go-login").parent().attr("style", "display:none");
+                        self.loadLogin(self.selector);
+                        $("#go-register").parent().removeAttr("style");
+                        $("#go-login").parent().removeAttr("style");
+                        $("#menu").children().first().remove();
                     });
 
                 return false;
