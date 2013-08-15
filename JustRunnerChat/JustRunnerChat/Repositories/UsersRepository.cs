@@ -80,7 +80,6 @@ namespace JustRunnerChat.Repositories
         }
 
         /* public members */
-
         public static void CreateUser(string username, string nickname, string authCode)
         {
             ValidateUsername(username);
