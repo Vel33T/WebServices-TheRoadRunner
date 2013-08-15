@@ -1125,9 +1125,12 @@ tr.pager td {
     width: 960px;
 }
 
-/*#tabs {
-padding-top: 150px;
-}*/
+#tabs {
+top: 150px;
+left: 20px;
+width: 410px;
+position: absolute;
+}
 
 /* JQuery css*/
  #dialog label, #dialog input { display:block; }
@@ -1136,3 +1139,7 @@ padding-top: 150px;
   #tabs { margin-top: 1em; }
   #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
   #add_tab { cursor: pointer; }
+
+  .ui-widget-content {
+border: none;
+}
