@@ -97,7 +97,7 @@ namespace JustRunnerChat.Repositories
                 var dbUser = context.Users.FirstOrDefault(u => u.Nickname.ToLower() == userNickname.ToLower());
 
                 var alreadyJoinedChannel = dbUser.Channels.FirstOrDefault(ch => ch.Name.ToLower() == channelName.ToLower());
-                if (alreadyJoinedChannel == null)
+                if (alreadyJoinedChannel != null)
                 {
                     throw new ServerErrorException("Already joined channel.", "ERR_JOINED_CHANNEL"); //TODO: Add error code
                 }

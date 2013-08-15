@@ -106,7 +106,8 @@ Chat.controller = (function () {
                         var pass = $("#tab_content").val();
                         self.persister.channels.create(name, pass).then(function (data) {
                             this.addTab(name);
-                            this.loadChatBox();
+                            var containerId = self.FindChatBoxId();
+                            self.loadChatBox(name, containerId);
                         });
 
                         return false;
@@ -121,7 +122,8 @@ Chat.controller = (function () {
                 self.persister.channels.join(name, "")
                     .then(function(data) {
                         self.addTab(name);
-                        this.loadChatBox();
+                        var containerId = self.FindChatBoxId();
+                        self.loadChatBox(name, containerId);
                     });
 
             });
@@ -149,8 +151,9 @@ Chat.controller = (function () {
                     }
                 }
                 self.persister.channels.sendMessage(channelName, message)
-                    .then(function(data) {
-                        self.loadChatBox();
+                    .then(function (data) {
+                        var containerId = self.FindChatBoxId();
+                        self.loadChatBox(channelName, containerId);
                     });
                 return false;
             });
@@ -191,42 +194,27 @@ Chat.controller = (function () {
             }, 1000);
         },
         
-        loadChatBox: function () {
-            var pubnub = PUBNUB.init({
-                publish_key: 'pub-c-ddf12ac6-a70e-4372-86d8-64318d45d6dc',
-                subscribe_key: 'sub-c-e07ea95a-0445-11e3-b42d-02ee2ddab7fe',
+        loadChatBox: function (channelName, id) {
+            PUBNUB.subscribe({
+                channel: channelName,
+                callback: function (message) { 
+                    // Received a message --> print it in the page
+                    document.getElementById(id).innerHTML += message + '\n';
+                }
             });
-            //var str = "<div id=pubnub pub-key=pub-c-ddf12ac6-a70e-4372-86d8-64318d45d6dc sub-key=sub-c-e07ea95a-0445-11e3-b42d-02ee2ddab7fe></div>";
-            $("#tabs-1").append("<div id='box' />");
-            setInterval(1000);
-            //alert("aaaaaaaaaa");
-            var box = pubnub.$('box');
-            var input = pubnub.$('input');
-            var channel = 'chat';
-
-            // HANDLE TEXT MESSAGE
-            function chat_receive(text) {
-                box.innerHTML = (''+text).replace( /[<>]/g, '' ) +
-                    '<br>' + box.innerHTML;
+        },
+        
+        findChatBoxId: function () {
+            var lis = $("#tabs li");
+            var id = "";
+            for (var i = 0; i < lis.length; i++) {
+                if (lis[i].getAttribute("aria-selected") == "true") {
+                    id = lis[i].getAttribute("aria-controls");
+                }
             }
 
-            // OPEN SOCKET TO RECEIVE TEXT MESSAGE
-            pubnub.subscribe({
-                channel : channel,
-                message : chat_receive
-            });
-
-            // SEND TEXT MESSAGE
-            pubnub.bind('keyup', input, function (e) {
-                (e.keyCode || e.charCode) === 13 && pubnub.publish({
-                    channel : channel,
-                    message : input.value,
-                    x       : (input.value='')
-                });
-            });
-
-            return false;
-        },
+            return id;
+        }
     });
 
     return {
