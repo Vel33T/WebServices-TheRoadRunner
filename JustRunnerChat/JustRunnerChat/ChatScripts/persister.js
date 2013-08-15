@@ -82,6 +82,56 @@ Chat.persisters = (function () {
         }
     });
 
+    var Channels = Class.create({
+        init: function(rootUrl) {
+            this.serviceUrl = rootUrl + "channel/";
+        },
+        
+        create: function (channelName, password) {
+            var url = this.serviceUrl + "create";
+            var data = {
+                name: channelName,
+                nickname: nickname,
+                password: password
+            };
+
+            return Requester.post(url, data);
+        },
+        
+        join: function (channelName, password) {
+            var url = this.serviceUrl + "join";
+            var data = {
+                name: channelName,
+                nickname: nickname,
+                password: password
+            };
+
+            return Requester.post(url, data);
+        },
+        
+        sendMessage: function (channelName, messageText) {
+            var url = this.serviceUrl + "send";
+            var data = {
+                name: channelName,
+                nickname: nickname,
+                message: messageText
+            };
+
+            return Requester.post(url, data);
+        },
+        
+        exitChannel: function (channelName) {
+            var url = this.serviceUrl + "exit";
+
+            var data = {
+                nickname: nickname,
+                name: channelName
+            };
+
+            return Requester.post(url, data);
+        }
+    });
+
     return {
         get: function(url) {
             return new Base(url);
