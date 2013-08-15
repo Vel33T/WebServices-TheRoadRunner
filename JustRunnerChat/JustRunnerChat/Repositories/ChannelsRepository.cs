@@ -2,9 +2,8 @@
 using JustRunnerChat.Model;
 using JustRunnerChat.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Collections.Generic;
 
 namespace JustRunnerChat.Repositories
 {
@@ -85,13 +84,13 @@ namespace JustRunnerChat.Repositories
                 {
                     if (dbChannel.Name.ToLower() == nameToLower)
                     {
-                        throw new ServerErrorException("Channel name does not exists.", "ERR_DUP_CHNAME"); //TODO: Fix Error code
+                        throw new ServerErrorException("Channel name does not exists.", "ERR_DUP_CHNAME");
                     }
                 }
 
                 if (dbChannel.Password != password)
                 {
-                    throw new ServerErrorException("Password incorrect.", "INV_USR_AUTH"); //TODO: Fix Error code
+                    throw new ServerErrorException("Password incorrect.", "INV_USR_AUTH");
                 }
 
                 var dbUser = context.Users.FirstOrDefault(u => u.Nickname.ToLower() == userNickname.ToLower());
@@ -99,7 +98,7 @@ namespace JustRunnerChat.Repositories
                 var alreadyJoinedChannel = dbUser.Channels.FirstOrDefault(ch => ch.Name.ToLower() == channelName.ToLower());
                 if (alreadyJoinedChannel == null)
                 {
-                    throw new ServerErrorException("Already joined channel.", "ERR_JOINED_CHANNEL"); //TODO: Add error code
+                    throw new ServerErrorException("Already joined channel.", "ERR_JOINED_CHANNEL");
                 }
 
                 dbChannel.Users.Add(dbUser);
@@ -144,9 +143,37 @@ namespace JustRunnerChat.Repositories
                 };
 
                 var dbChannel = context.Channels.FirstOrDefault(c => c.Name.ToLower() == channelName.ToLower());
+                
                 dbChannel.History.Add(currentMsg);
 
                 context.SaveChanges();
+            }
+        }
+
+        public static IEnumerable<MessageModel> GetHistory(string channelName)
+        {
+            ValidateChannelName(channelName);
+            using (ChatContext context = new ChatContext())
+            {
+                var dbChannel = context.Channels.FirstOrDefault(c => c.Name.ToLower() == channelName.ToLower());
+
+                if (dbChannel == null)
+                {
+                    throw new ServerErrorException(); //TODO: error messages
+                }
+
+                var history = dbChannel.History.OrderBy(x => x.DateTime).ToList();
+
+                var historyModel = history.Select(new Func<Message, MessageModel>(x => new MessageModel() 
+                {
+                    Author = x.Author,
+                    Content = x.Content,
+                    DateTime = x.DateTime,
+                    Channel = x.Channel.Name,
+                    MessageId = x.MessageId
+                })).ToList();
+
+                return historyModel;
             }
         }
     }
