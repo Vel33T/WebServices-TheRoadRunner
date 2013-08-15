@@ -23,8 +23,8 @@ namespace JustRunnerChat.Model
 
         public string Password { get; set; }
 
-        public ICollection<Message> History { get; set; }
+        public virtual ICollection<Message> History { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

@@ -20,5 +20,5 @@ namespace JustRunnerChat.Model
         public DateTime DateTime { get; set; }
 
         public Channel Channel { get; set; }
-    }
+    }   
 }

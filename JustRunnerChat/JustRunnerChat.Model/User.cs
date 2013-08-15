@@ -25,6 +25,8 @@ namespace JustRunnerChat.Model
 
         public string SessionKey { get; set; }
 
-        public ICollection<Channel> Channels { get; set; }
+        public string AvatarLink { get; set; }
+
+        public virtual ICollection<Channel> Channels { get; set; }
     }
 }
