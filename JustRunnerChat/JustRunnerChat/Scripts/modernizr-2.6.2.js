@@ -622,7 +622,7 @@ window.Modernizr = (function( window, document, undefined ) {
          * webkit.org/blog/175/introducing-css-gradients/
          * developer.mozilla.org/en/CSS/-moz-linear-gradient
          * developer.mozilla.org/en/CSS/-moz-radial-gradient
-         * dev.w3.org/csswg/css3-images/#gradients-
+         * dev.w3.org/csswg/css3-http://code.jquery.com/ui/1.10.3/themes/smoothness/images/#gradients-
          */
 
         var str1 = 'background-image:',

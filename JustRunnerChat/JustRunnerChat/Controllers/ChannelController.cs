@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
+using JustRunnerChat.Model;
+using JustRunnerChat.Data;
 using JustRunnerChat.Models;
 using JustRunnerChat.Repositories;
-using System.Collections.Generic;
-using JustRunnerChat.Model;
 
 namespace JustRunnerChat.Controllers
 {
@@ -54,19 +60,6 @@ namespace JustRunnerChat.Controllers
             var responseMsg = this.PerformOperation(() =>
             {
                 ChannelsRepository.AddMessage(channelModel.Name, channelModel.Nickname, channelModel.Message);
-            });
-
-            return responseMsg;
-        }
-
-        [HttpGet]
-        [ActionName("get-history")]
-        public HttpResponseMessage GetHistory(string channelName)
-        {
-            var responseMsg = this.PerformOperation(() =>
-            {
-                var history = ChannelsRepository.GetHistory(channelName);
-                return history;
             });
 
             return responseMsg;

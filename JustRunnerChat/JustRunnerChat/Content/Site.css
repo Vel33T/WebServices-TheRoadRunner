@@ -835,7 +835,7 @@ tr.pager td {
     height: 406px;
 }
 .section-channels {
-    left: 747px;
+    left: 850px;
     width: 300px;
     height: 768px;
 }
@@ -847,7 +847,7 @@ tr.pager td {
 }
 .section-chatbox {
     left: 310px;
-    width: 440px;
+    width: 555px;
     height: 768px;
 }
 .time {
@@ -876,7 +876,7 @@ tr.pager td {
 /* UPDATES */
 .update-area {
     position: absolute;
-    top: 53px;
+    top: 85px;
     left: 22px;
 }
 .update-item {
@@ -973,7 +973,7 @@ tr.pager td {
 
     background: rgba(0,0,0,0.4);
 
-    width: 410px;
+    width: 525px;
     height: 42px;
 
     border: 2px solid rgba(255,255,255,0.4);
@@ -1128,8 +1128,9 @@ tr.pager td {
 #tabs {
 top: 150px;
 left: 20px;
-width: 410px;
+width: 525px;
 position: absolute;
+min-height: 600px;
 }
 
 /* JQuery css*/
@@ -1138,8 +1139,14 @@ position: absolute;
   #dialog input, #dialog textarea { width: 95%; }
   #tabs { margin-top: 1em; }
   #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
-  #add_tab { cursor: pointer; }
+  #add_tab { cursor: pointer; position: absolute;
+top: 60px;
+left: 22px;}
 
   .ui-widget-content {
 border: none;
+}
+
+  .box {
+min-height: 30px;
 }
