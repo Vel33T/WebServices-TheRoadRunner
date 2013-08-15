@@ -19,11 +19,11 @@ namespace JustRunnerChat.Repositories
         {
             if (channelName == null || channelName.Length < MinNameChars || channelName.Length > MaxNameChars)
             {
-                throw new ServerErrorException("Username should be between 4 and 30 symbols long", "INV_CHNAME_LEN");
+                throw new ServerErrorException("Channel name should be between 4 and 30 symbols long", "INV_CHNAME_LEN");
             }
             else if (channelName.Any(ch => !ValidNameChars.Contains(ch)))
             {
-                throw new ServerErrorException("Channel contains invalid characters", "INV_CHNAME_CHARS");
+                throw new ServerErrorException("Channel name contains invalid characters", "INV_CHNAME_CHARS");
             }
         }
 
@@ -31,11 +31,11 @@ namespace JustRunnerChat.Repositories
         {
             if (nickname == null || nickname.Length < MinNameChars || nickname.Length > MaxNameChars)
             {
-                throw new ServerErrorException("Username should be between 4 and 30 symbols long", "INV_CHNAME_LEN");
+                throw new ServerErrorException("Nickname should be between 4 and 30 symbols long", "INV_NKNAME_LEN");
             }
             else if (nickname.Any(ch => !ValidNameChars.Contains(ch)))
             {
-                throw new ServerErrorException("Username contains invalid characters", "INV_CHNAME_CHARS");
+                throw new ServerErrorException("Nickname contains invalid characters", "INV_NKNAME_CHARS");
             }
         }
 

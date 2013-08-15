@@ -109,7 +109,8 @@ namespace JustRunnerChat.Repositories
                 {
                     Username = usernameToLower,
                     Nickname = nickname,
-                    AuthCode = authCode
+                    AuthCode = authCode,
+                    AvatarLink = "http://icons.iconarchive.com/icons/deleket/bioman/128/Bioman-Avatar-3-Blue-icon.png"
                 };
                 context.Users.Add(dbUser);
                 context.SaveChanges();
@@ -121,8 +122,7 @@ namespace JustRunnerChat.Repositories
         {
             ValidateUsername(username);
             ValidateAuthCode(authCode);
-            var context = new ChatContext();
-            using (context)
+            using (ChatContext context = new ChatContext())
             {
                 var usernameToLower = username.ToLower();
                 var user = context.Users.FirstOrDefault(u => u.Username.ToLower() == usernameToLower && u.AuthCode == authCode);
@@ -142,8 +142,7 @@ namespace JustRunnerChat.Repositories
         public static int LoginUser(string sessionKey)
         {
             ValidateSessionKey(sessionKey);
-            var context = new ChatContext();
-            using (context)
+            using (ChatContext context = new ChatContext())
             {
                 var user = context.Users.FirstOrDefault(u => u.SessionKey == sessionKey);
                 if (user == null)
@@ -157,8 +156,7 @@ namespace JustRunnerChat.Repositories
         public static void LogoutUser(string sessionKey)
         {
             ValidateSessionKey(sessionKey);
-            var context = new ChatContext();
-            using (context)
+            using (ChatContext context = new ChatContext())
             {
                 var user = context.Users.FirstOrDefault(u => u.SessionKey == sessionKey);
                 if (user == null)
@@ -172,8 +170,7 @@ namespace JustRunnerChat.Repositories
 
         public static IEnumerable<User> GetAllUsers()
         {
-            var context = new ChatContext();
-            using (context)
+            using (ChatContext context = new ChatContext())
             {
                 var users =
                     (from user in context.Users
@@ -182,6 +179,23 @@ namespace JustRunnerChat.Repositories
                          Nickname = user.Nickname,
                         });
                 return users.ToList();
+            }
+        }
+
+        public static void AddAvatar(string nickname, string avatarLink)
+        {
+            ValidateNickname(nickname);
+            using (ChatContext context = new ChatContext())
+            {
+                var user = context.Users.FirstOrDefault(u => u.Nickname == nickname);
+                if (user == null)
+                {
+                    throw new ServerErrorException(); //TODO: Add error code
+                }
+
+                user.AvatarLink = avatarLink;
+
+                context.SaveChanges();
             }
         }
     }
