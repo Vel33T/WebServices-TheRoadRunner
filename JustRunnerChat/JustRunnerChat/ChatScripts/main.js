@@ -2,6 +2,7 @@
 /// <reference path="dataAccess.js" />
 (function () {
     var serviceRoot = "http://roadrunnerchat.apphb.com/api/";
+    //var serviceRoot = "http://localhost:16502/api/";
     
     var persister = Chat.persisters.get(serviceRoot);
 
