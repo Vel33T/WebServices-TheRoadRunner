@@ -171,6 +171,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ChannelModel.cs" />
+    <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\ServerErrorException.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -23,7 +23,7 @@ namespace JustRunnerChat.Repositories
             }
             else if (channelName.Any(ch => !ValidNameChars.Contains(ch)))
             {
-                throw new ServerErrorException("Username contains invalid characters", "INV_CHNAME_CHARS");
+                throw new ServerErrorException("Channel contains invalid characters", "INV_CHNAME_CHARS");
             }
         }
 
@@ -147,6 +147,33 @@ namespace JustRunnerChat.Repositories
                 dbChannel.History.Add(currentMsg);
 
                 context.SaveChanges();
+            }
+        }
+
+        public static IEnumerable<MessageModel> GetHistory(string channelName)
+        {
+            ValidateChannelName(channelName);
+            using (ChatContext context = new ChatContext())
+            {
+                var dbChannel = context.Channels.FirstOrDefault(c => c.Name.ToLower() == channelName.ToLower());
+
+                if (dbChannel == null)
+                {
+                    throw new ServerErrorException(); //TODO: error messages
+                }
+
+                var history = dbChannel.History.OrderBy(x => x.DateTime).ToList();
+
+                var historyModel = history.Select(new Func<Message, MessageModel>(x => new MessageModel()
+                {
+                    Author = x.Author,
+                    Content = x.Content,
+                    DateTime = x.DateTime,
+                    Channel = x.Channel.Name,
+                    MessageId = x.MessageId
+                })).ToList();
+
+                return historyModel;
             }
         }
     }

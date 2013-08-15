@@ -64,5 +64,18 @@ namespace JustRunnerChat.Controllers
 
             return responseMsg;
         }
+
+        [HttpGet]
+        [ActionName("get-history")]
+        public HttpResponseMessage GetHistory(string channelName)
+        {
+            var responseMsg = this.PerformOperation(() =>
+            {
+                var history = ChannelsRepository.GetHistory(channelName);
+                return history;
+            });
+
+            return responseMsg;
+        }
     }
 }
