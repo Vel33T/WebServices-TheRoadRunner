@@ -105,8 +105,8 @@ Chat.controller = (function () {
                         var name = $("#tab_title").val();
                         var pass = $("#tab_content").val();
                         self.persister.channels.create(name, pass).then(function (data) {
-                            this.addTab(name);
-                            var containerId = self.FindChatBoxId();
+                            //this.addTab(name);
+                            var containerId = self.findChatBoxId();
                             self.loadChatBox(name, containerId);
                         });
 
@@ -122,7 +122,7 @@ Chat.controller = (function () {
                 self.persister.channels.join(name, "")
                     .then(function(data) {
                         self.addTab(name);
-                        var containerId = self.FindChatBoxId();
+                        var containerId = self.findChatBoxId();
                         self.loadChatBox(name, containerId);
                     });
 
@@ -150,11 +150,8 @@ Chat.controller = (function () {
                         channelName = boxes[i].children[0].innerHTML;
                     }
                 }
-                self.persister.channels.sendMessage(channelName, message)
-                    .then(function (data) {
-                        var containerId = self.FindChatBoxId();
-                        self.loadChatBox(channelName, containerId);
-                    });
+                self.persister.channels.sendMessage(channelName, message);
+
                 return false;
             });
         },
@@ -195,11 +192,17 @@ Chat.controller = (function () {
         },
         
         loadChatBox: function (channelName, id) {
-            PUBNUB.subscribe({
+            var self = this;
+            var pubnub = PUBNUB.init({
+                publish_key: 'pub-c-5093de55-5a92-4b74-9522-d10c4c129dcc',
+                subscribe_key: 'sub-c-20837058-05f4-11e3-991c-02ee2ddab7fe',
+            });
+            pubnub.subscribe({
                 channel: channelName,
                 callback: function (message) { 
                     // Received a message --> print it in the page
-                    document.getElementById(id).innerHTML += message + '\n';
+                    document.getElementById(id).innerHTML += self.persister.getNickname() +
+                        ": " + message + '<br/>';
                 }
             });
         },
