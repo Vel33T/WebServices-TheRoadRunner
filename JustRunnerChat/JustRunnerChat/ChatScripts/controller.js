@@ -130,7 +130,8 @@ Chat.controller = (function () {
 
             wrapper.on("click", "#tabs li a", function(ev) {
                 var channelName = $(this).text();
-
+                $(this).parent().attr("channel-selected", true);
+                this.findChatBox();
                 self.persister.channels.getUsers(channelName)
                     .then(function (data) {
                         var users = "";
@@ -146,7 +147,7 @@ Chat.controller = (function () {
                 var boxes = $("#tabs ul li");
                 var channelName;
                 for (var i = 0; i < boxes.length; i++) {
-                    if (boxes[i].getAttribute("aria-selected") == "true") {
+                    if (boxes[i].getAttribute("channel-selected") == "true") {
                         channelName = boxes[i].children[0].innerHTML;
                     }
                 }
@@ -159,14 +160,15 @@ Chat.controller = (function () {
         addTab: function (clicked) {
             var tabTitle = $("#tab_title"),
                     tabContent = $("#tab_content"),
-                    tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
+                    tabTemplate = "<li #{selected}><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
                     tabCounter = 2;
             var tabs = $("#tabs").tabs();
 
             var label = clicked || "Tab " + tabCounter,
-            id = "tabs-" + tabCounter,
-            li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label)),
-            tabContentHtml = tabContent.val() || "Tab " + tabCounter + " content.";
+                id = "tabs-" + tabCounter,
+                selected = "channel-selected=true",
+                li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label).replace(/#\{selected\}/g, selected)),
+                tabContentHtml = tabContent.val() || "Tab " + tabCounter + " content.";
 
             tabs.find(".ui-tabs-nav").append(li);
             tabs.append("<div id='" + id + "'></div>");
@@ -184,7 +186,7 @@ Chat.controller = (function () {
                     .then(function (data) {
                         var channelsHtml = "";
                         for (var i = 0; i < data.length; i++) {
-                            channelsHtml += '<li><a href"#">' + data[i].name + '</a></li>';
+                            channelsHtml += '<li><a href"#" >' + data[i].name + '</a></li>';
                         }
                         $("#update-area").html(channelsHtml);
                     });
@@ -208,11 +210,11 @@ Chat.controller = (function () {
         },
         
         findChatBoxId: function () {
-            var lis = $("#tabs li");
+            var list = $("#tabs li");
             var id = "";
-            for (var i = 0; i < lis.length; i++) {
-                if (lis[i].getAttribute("aria-selected") == "true") {
-                    id = lis[i].getAttribute("aria-controls");
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].getAttribute("channel-selected") == "true") {
+                    id = "tabs-" + (i + 1);
                 }
             }
 
