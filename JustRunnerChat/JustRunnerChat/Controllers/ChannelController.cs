@@ -64,7 +64,9 @@ namespace JustRunnerChat.Controllers
         {
             var responseMsg = this.PerformOperation(() =>
             {
-                ChannelsRepository.AddMessage(channelModel.Name, channelModel.Nickname, channelModel.Message);
+                var index = channelModel.Message.IndexOf(':');
+                var message = channelModel.Message.Substring(index + 2);
+                ChannelsRepository.AddMessage(channelModel.Name, channelModel.Nickname, message);
             });
 
             pubnub.Publish(channelModel.Name, channelModel.Message);

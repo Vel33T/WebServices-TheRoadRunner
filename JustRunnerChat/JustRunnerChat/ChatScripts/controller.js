@@ -11,6 +11,7 @@ Chat.controller = (function () {
     var Access = Class.create({
         init: function (persister) {
             this.persister = persister;
+            this.tabCounter = 1;
         },
 
         loadUI: function (selector) {
@@ -31,7 +32,7 @@ Chat.controller = (function () {
         loadRegister: function (selector) {
             $(selector).load("../PartialViews/register.html");
         },
-            
+
         loadChat: function (selector) {
             var nickname = this.persister.getNickname();
             $(selector).load("../PartialViews/chat.html");
@@ -40,7 +41,7 @@ Chat.controller = (function () {
             $("#go-register").parent().attr("style", "display:none");
             $("#go-login").parent().attr("style", "display:none");
         },
-        
+
         atachUIHandlers: function (selector) {
             var wrapper = $(selector);
             var self = this;
@@ -105,7 +106,7 @@ Chat.controller = (function () {
                         var name = $("#tab_title").val();
                         var pass = $("#tab_content").val();
                         self.persister.channels.create(name, pass).then(function (data) {
-                            //this.addTab(name);
+                            self.addTab(name);
                             var containerId = self.findChatBoxId();
                             self.loadChatBox(name, containerId);
                         });
@@ -117,10 +118,10 @@ Chat.controller = (function () {
                 return false;
             });
 
-            wrapper.on("click", "#update-area li a", function(parameters) {
+            wrapper.on("click", "#update-area li a", function (parameters) {
                 var name = $(this).text();
                 self.persister.channels.join(name, "")
-                    .then(function(data) {
+                    .then(function (data) {
                         self.addTab(name);
                         var containerId = self.findChatBoxId();
                         self.loadChatBox(name, containerId);
@@ -128,7 +129,7 @@ Chat.controller = (function () {
 
             });
 
-            wrapper.on("click", "#tabs li a", function(ev) {
+            wrapper.on("click", "#tabs li a", function (ev) {
                 var channelName = $(this).text();
                 $(this).parent().attr("channel-selected", true);
                 this.findChatBox();
@@ -136,13 +137,13 @@ Chat.controller = (function () {
                     .then(function (data) {
                         var users = "";
                         for (var i = 0; i < data.length; i++) {
-                            users += '<li>'+ data[i].nickname +'</li>';
+                            users += '<li>' + data[i].nickname + '</li>';
                         }
                         $("#list-of-people").html(users);
                     });
             });
 
-            wrapper.on("click", "#chat-button", function() {
+            wrapper.on("click", "#chat-button", function () {
                 var message = $("#chat-input").val();
                 var boxes = $("#tabs ul li");
                 var channelName;
@@ -151,30 +152,64 @@ Chat.controller = (function () {
                         channelName = boxes[i].children[0].innerHTML;
                     }
                 }
-                self.persister.channels.sendMessage(channelName, message);
+                self.persister.channels.sendMessage(channelName, self.persister.getNickname() + ": " + message).then(function () {
+                    $("#chat-input").val("");
+                });
 
                 return false;
             });
+
+            wrapper.on("keyup", function (e) {
+                if ((e.keyCode || e.charCode) === 13) {
+                    var message = $("#chat-input").val();
+                    var boxes = $("#tabs ul li");
+                    var channelName;
+                    for (var i = 0; i < boxes.length; i++) {
+                        if (boxes[i].getAttribute("channel-selected") == "true") {
+                            channelName = boxes[i].children[0].innerHTML;
+                        }
+                    }
+                    self.persister.channels.sendMessage(channelName, self.persister.getNickname() + ": " + message)
+                    .then(function () {
+                        $("#chat-input").val("");
+                    });
+                    return false;
+                }
+
+            });
+
+
+            // Exit channel
+            wrapper.on("click", "#tabs ul li span", function (parameters) {
+                var name = $(this).prev().text();
+                //var div = $(this).pa
+                //alert(name);
+                self.persister.channels.exitChannel(name)
+                    .then(function (data) {
+                        self.unloadChatBox(name);
+                        self.tabCounter--;
+                    });
+                return false;
+            });
         },
-        
+
         addTab: function (clicked) {
             var tabTitle = $("#tab_title"),
                     tabContent = $("#tab_content"),
-                    tabTemplate = "<li #{selected}><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
-                    tabCounter = 2;
+                    tabTemplate = "<li #{selected}><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>";
             var tabs = $("#tabs").tabs();
-
+            $("#tabs li").attr("channel-selected", false);
             var label = clicked || "Tab " + tabCounter,
-                id = "tabs-" + tabCounter,
+                id = "tabs-" + this.tabCounter,
                 selected = "channel-selected=true",
                 li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label).replace(/#\{selected\}/g, selected)),
-                tabContentHtml = tabContent.val() || "Tab " + tabCounter + " content.";
+                tabContentHtml = tabContent.val() || "Tab " + this.tabCounter + " content.";
 
             tabs.find(".ui-tabs-nav").append(li);
-            tabs.append("<div id='" + id + "'></div>");
+            tabs.append("<div id='" + id + "'</div>");
             //$("#update-area ul").append("<li><a href='#'>" + tabTitle.val() + "</a></li>");
             tabs.tabs("refresh");
-            tabCounter++;
+            this.tabCounter++;
 
             return false;
         },
@@ -192,23 +227,32 @@ Chat.controller = (function () {
                     });
             }, 1000);
         },
-        
+
         loadChatBox: function (channelName, id) {
-            var self = this;
             var pubnub = PUBNUB.init({
                 publish_key: 'pub-c-5093de55-5a92-4b74-9522-d10c4c129dcc',
                 subscribe_key: 'sub-c-20837058-05f4-11e3-991c-02ee2ddab7fe',
             });
+            var input = pubnub.$('chat-input');
             pubnub.subscribe({
                 channel: channelName,
-                callback: function (message) { 
+                callback: function (message) {
                     // Received a message --> print it in the page
-                    document.getElementById(id).innerHTML += self.persister.getNickname() +
-                        ": " + message + '<br/>';
+                    document.getElementById(id).innerHTML += message + '<br/>';
                 }
             });
         },
-        
+
+        unloadChatBox: function (channelName) {
+            var pubnub = PUBNUB.init({
+                publish_key: 'pub-c-5093de55-5a92-4b74-9522-d10c4c129dcc',
+                subscribe_key: 'sub-c-20837058-05f4-11e3-991c-02ee2ddab7fe',
+            });
+            pubnub.unsubscribe({
+                channel: channelName
+            });
+        },
+
         findChatBoxId: function () {
             var list = $("#tabs li");
             var id = "";
@@ -223,7 +267,7 @@ Chat.controller = (function () {
     });
 
     return {
-        get: function(dataPersister) {
+        get: function (dataPersister) {
             return new Access(dataPersister);
         }
     };

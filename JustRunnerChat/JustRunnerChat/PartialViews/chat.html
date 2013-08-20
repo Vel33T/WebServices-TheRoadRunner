@@ -59,7 +59,7 @@
                     modal: true,
                     buttons: {
                         Add: function () {
-                            addTab();
+                           // addTab();
                             $(this).dialog("close");
                         },
                         Cancel: function () {
@@ -81,6 +81,7 @@
 
                 // actual addTab function: adds new tab using the input from the form above
                 function addTab() {
+                    $("#tabs li").attr("channel-selected", false);
                     var label = tabTitle.val() || "Tab " + tabCounter,
                         id = "tabs-" + tabCounter,
                         selected = "channel-selected=true",
@@ -88,7 +89,7 @@
                         tabContentHtml = tabContent.val() || "Tab " + tabCounter + " content.";
 
                     tabs.find(".ui-tabs-nav").append(li);
-                    tabs.append("<div id=" + id + "</div>");
+                    tabs.append("<div id='" + id + "'</div>");
                     $("#update-area ul").append("<li><a href='#'>" + tabTitle.val() + "</a></li>");
                     tabs.tabs("refresh");
                     tabCounter++;
@@ -103,9 +104,17 @@
 
                 // close icon: removing the tab on click
                 tabs.delegate("span.ui-icon-close", "click", function () {
-                    var panelId = $(this).closest("li").remove().attr("aria-controls");
-                    $("#" + panelId).remove();
-                    tabs.tabs("refresh");
+                    //var panelId = $(this).closest("li").remove().attr("aria-controls");
+                    //$("#" + panelId).remove();
+                    //tabs.tabs("refresh");
+                    var panelId = $(this).closest("li");
+                    var parentDiv = $(this).closest("div").children("#tabs-1").first();
+                    setTimeout(function () {
+                        panelId.remove().attr("aria-controls");
+                        parentDiv.remove();
+                        $("#" + panelId).remove();
+                        tabs.tabs("refresh");
+                    }, 500);
                 });
 
                 tabs.bind("keyup", function (event) {
