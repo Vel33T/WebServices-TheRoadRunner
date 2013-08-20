@@ -130,9 +130,10 @@ Chat.controller = (function () {
             });
 
             wrapper.on("click", "#tabs li a", function (ev) {
+                $("#tabs li").attr("channel-selected", false);
                 var channelName = $(this).text();
                 $(this).parent().attr("channel-selected", true);
-                this.findChatBox();
+                // this.findChatBox();
                 self.persister.channels.getUsers(channelName)
                     .then(function (data) {
                         var users = "";
@@ -153,8 +154,8 @@ Chat.controller = (function () {
                     }
                 }
                 self.persister.channels.sendMessage(channelName, self.persister.getNickname() + ": " + message).then(function () {
-                    $("#chat-input").val("");
-                });
+                        $("#chat-input").val("");
+                    });
 
                 return false;
             });
