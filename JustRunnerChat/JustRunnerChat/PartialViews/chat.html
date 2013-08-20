@@ -3,6 +3,7 @@
     <!-- Users -->
 
     <div class="section section-users">
+        <a href="chat.html">chat.html</a>
         <div class="relative">
             <div class="circle-header circle-header-two"></div>
             <div class="circle-header-text">
@@ -47,8 +48,8 @@
             $(function () {
                 var tabTitle = $("#tab_title"),
                     tabContent = $("#tab_content"),
-                    tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
-                    tabCounter = 2;
+                    tabTemplate = "<li #{selected}><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
+                    tabCounter = 1;
 
                 var tabs = $("#tabs").tabs();
 
@@ -82,11 +83,12 @@
                 function addTab() {
                     var label = tabTitle.val() || "Tab " + tabCounter,
                         id = "tabs-" + tabCounter,
-                        li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label)),
+                        selected = "channel-selected=true",
+                       li = $(tabTemplate.replace(/#\{href\}/g, "#" + id).replace(/#\{label\}/g, label).replace(/#\{selected\}/g, selected)),
                         tabContentHtml = tabContent.val() || "Tab " + tabCounter + " content.";
 
                     tabs.find(".ui-tabs-nav").append(li);
-                    tabs.append("<div class='box " + id + "'></div>");
+                    tabs.append("<div id=" + id + "</div>");
                     $("#update-area ul").append("<li><a href='#'>" + tabTitle.val() + "</a></li>");
                     tabs.tabs("refresh");
                     tabCounter++;
@@ -130,7 +132,9 @@
 
 
         <div id="tabs">
-           
+             <ul>
+                
+            </ul>
         </div>
        
     </div>
